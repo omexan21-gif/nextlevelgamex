@@ -2110,11 +2110,11 @@ async function loadFromSheets() {
   try {
     document.getElementById('count-num').textContent = '⏳';
     // Llama al Apps Script que lee el Sheet y devuelve JSON
-    // POST nunca se cachea — solución definitiva al caché de Apps Script
-    const res = await fetch(window.APPS_SCRIPT_URL, {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({action: 'getStock'})
+    // GET con redirect follow — Apps Script maneja CORS en doGet automáticamente
+    const url = window.APPS_SCRIPT_URL + '?action=getStock&t=' + Date.now();
+    const res = await fetch(url, {
+      method: 'GET',
+      redirect: 'follow'
     });
     const data = await res.json();
     if (data && data.length > 0) {
